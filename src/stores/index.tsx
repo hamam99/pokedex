@@ -1,6 +1,7 @@
 import {atom} from 'recoil';
+import {ResultListPokemon} from '../services/types';
 
-export const listPokemon = atom({
+export const listPokemon = atom<ResultListPokemon[]>({
   key: 'list-pokemon',
   default: [],
 });
