@@ -1,10 +1,16 @@
-import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  useWindowDimensions,
+  TouchableOpacity,
+  ToastAndroid,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {IRequest, ResultListPokemon} from '../../services/types';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import {listPokemon, offsetListPokemon} from '../../stores';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import {getListPokemon} from '../../services';
 
 const PokemonList = () => {
@@ -32,6 +38,11 @@ const PokemonList = () => {
     if (response && response?.length > 0) {
       setListPokemonRecoil([...listPokemonRecoil, ...response]);
       setOffsetList(offset + limit);
+      return;
+    }
+
+    if (error) {
+      ToastAndroid.show(error, ToastAndroid.SHORT);
     }
   };
 
