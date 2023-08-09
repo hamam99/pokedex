@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {IRequest, ResultListPokemon} from '../../services/types';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
-import {listPokemon, offsetListPokemon} from '../../stores';
+import {listPokemon, nextOffsetListPokemon} from '../../stores';
 import {useRecoilState} from 'recoil';
 import {getListPokemon} from '../../services';
 
@@ -18,7 +18,7 @@ const PokemonList = () => {
   const [isLoading, setLoading] = useState(false);
 
   const [listPokemonRecoil, setListPokemonRecoil] = useRecoilState(listPokemon);
-  const [offsetList, setOffsetList] = useRecoilState(offsetListPokemon);
+  const [offsetList, setOffsetList] = useRecoilState(nextOffsetListPokemon);
 
   useEffect(() => {
     getAllPokemon({

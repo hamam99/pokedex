@@ -6,7 +6,7 @@ export const listPokemon = atom<ResultListPokemon[]>({
   default: [],
 });
 
-export const offsetListPokemon = atom({
+export const nextOffsetListPokemon = atom({
   key: 'offset-list-pokemon',
   default: 0,
 });
