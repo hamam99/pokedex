@@ -11,7 +11,7 @@ import {
 export const getListPokemon = async ({
   limit = 8,
   offset = 0,
-}: IRequest): Promise<IResponseFormat<ResultListPokemon[], string>> => {
+}: IRequest): Promise<IResponseFormat<string[], string>> => {
   try {
     const res = await AxiosClient.get(ListUrl.listPokemon, {
       params: {
@@ -21,8 +21,10 @@ export const getListPokemon = async ({
     });
     const data = res.data as ResponseListPokemon;
 
+    const result = data?.results.map(item => item.name);
+
     return {
-      response: data.results,
+      response: result,
       error: null,
     };
   } catch (err) {
