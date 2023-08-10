@@ -23,7 +23,7 @@ const RootNavigation = () => {
         name="PokemonDetail"
         component={PokemonDetail}
         options={{
-          headerShown: false,
+          headerShown: true,
           header: () => {
             return <Header title="Pokemon Detail" withBack={true} />;
           },
