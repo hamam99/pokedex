@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {IRequest} from '../../services/types';
+import {IRequest, PokemonListTypes} from '../../services/types';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
 import {
   filteredPokemon,
@@ -17,11 +17,14 @@ import {
 } from '../../stores';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {getListPokemon} from '../../services';
+import {useNavigation} from '@react-navigation/native';
 
 const PokemonList = () => {
   const {width} = useWindowDimensions();
   const [isLoading, setLoading] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('');
+
+  const {navigate} = useNavigation();
 
   const [listPokemonRecoil, setListPokemonRecoil] = useRecoilState(listPokemon);
   const [offsetList, setOffsetList] = useRecoilState(nextOffsetListPokemon);
@@ -31,7 +34,7 @@ const PokemonList = () => {
 
   useEffect(() => {
     getAllPokemon({
-      limit: 50,
+      limit: 8,
       offset: 0,
     });
   }, []);
@@ -69,9 +72,15 @@ const PokemonList = () => {
     });
   };
 
-  const renderItem = ({item}: {item: string}) => {
+  const renderItem = ({item}: {item: PokemonListTypes}) => {
     return (
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigate('PokemonDetail', {
+            name: item.name,
+            id: item.id,
+          });
+        }}>
         <Text
           style={{
             paddingHorizontal: 8,
@@ -82,7 +91,7 @@ const PokemonList = () => {
             borderColor: '#6a6a6a',
             color: 'black',
           }}>
-          {item}
+          {item.name}
         </Text>
       </TouchableOpacity>
     );
