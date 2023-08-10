@@ -1,76 +1,21 @@
-import {
-  View,
-  Text,
-  useWindowDimensions,
-  TouchableOpacity,
-  ToastAndroid,
-} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
+import React from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {IRequest, PokemonListTypes} from '../../services/types';
+import {PokemonListTypes} from '../../services/types';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
-import {
-  filteredPokemon,
-  listPokemon,
-  nextOffsetListPokemon,
-  searchQuery,
-} from '../../stores';
+import {filteredPokemon, searchQuery} from '../../stores';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {getListPokemon} from '../../services';
 import {useNavigation} from '@react-navigation/native';
+import useGetAllPokemon from '../../hooks/useGetAllPokemon';
 
 const PokemonList = () => {
   const {width} = useWindowDimensions();
-  const [isLoading, setLoading] = useState(false);
-  // const [searchQuery, setSearchQuery] = useState('');
 
   const {navigate} = useNavigation();
 
-  const [listPokemonRecoil, setListPokemonRecoil] = useRecoilState(listPokemon);
-  const [offsetList, setOffsetList] = useRecoilState(nextOffsetListPokemon);
   const [searchQueryRecoil, setSearchQueryRecoil] = useRecoilState(searchQuery);
-
   const filteredPokemonRecoil = useRecoilValue(filteredPokemon);
-
-  useEffect(() => {
-    getAllPokemon({
-      limit: 8,
-      offset: 0,
-    });
-  }, []);
-
-  const getAllPokemon = async ({limit = 8, offset = 0}: IRequest) => {
-    setLoading(true);
-    const {error, response} = await getListPokemon({
-      limit,
-      offset,
-    });
-    setLoading(false);
-
-    if (response && response?.length > 0) {
-      setListPokemonRecoil([...listPokemonRecoil, ...response]);
-      setOffsetList(offset + limit);
-      return;
-    }
-
-    if (error) {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
-    }
-  };
-
-  const loadMore = async () => {
-    if (isLoading) {
-      return;
-    }
-
-    if (searchQueryRecoil.length > 0) {
-      return;
-    }
-
-    getAllPokemon({
-      offset: offsetList,
-    });
-  };
+  const {loading, loadMore} = useGetAllPokemon();
 
   const renderItem = ({item}: {item: PokemonListTypes}) => {
     return (
@@ -114,7 +59,7 @@ const PokemonList = () => {
         }}
       />
 
-      <ActivityIndicator animating={isLoading} color={MD2Colors.blue500} />
+      <ActivityIndicator animating={loading} color={MD2Colors.blue500} />
       <FlatGrid
         itemDimension={(width - 50) / 2}
         data={filteredPokemonRecoil}
@@ -122,7 +67,7 @@ const PokemonList = () => {
         ListEmptyComponent={() => <Text>No pokemon</Text>}
         onEndReached={loadMore}
         onEndReachedThreshold={0}
-        refreshing={isLoading}
+        refreshing={loading}
       />
     </View>
   );
