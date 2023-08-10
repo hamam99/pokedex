@@ -1,7 +1,8 @@
 import {atom, selector} from 'recoil';
-import {ResultListPokemon} from '../services/types';
+import {PokemonDetailTypes} from '../services/types/PokemonDetailTypes';
+import {PokemonListTypes} from '../services/types';
 
-export const listPokemon = atom<string[]>({
+export const listPokemon = atom<PokemonListTypes[]>({
   key: 'list-pokemon',
   default: [],
 });
@@ -23,13 +24,13 @@ export const filteredPokemon = selector({
     const list = get(listPokemon);
 
     if (filter.length > 0) {
-      return list.filter(item => item.includes(filter));
+      return list.filter(item => item.name.includes(filter));
     }
     return list;
   },
 });
 
-export const detailPokemon = atom({
+export const detailPokemon = atom<PokemonDetailTypes | null>({
   key: 'detail-pokemon',
-  default: {},
+  default: null,
 });
