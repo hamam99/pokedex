@@ -24,3 +24,8 @@ export interface ResultListPokemon {
   name: string;
   url: string;
 }
+
+export interface PokemonListTypes {
+  name: string;
+  id: string;
+}
