@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {listPokemon, nextOffsetListPokemon, searchQuery} from '../stores';
-import {IRequest} from '../services/types';
 import {getListPokemon} from '../services';
 import {ToastAndroid} from 'react-native';
+import {IRequest} from '../services/types/PokemonListTypes';
 
 const useGetAllPokemon = () => {
   const [loading, setLoading] = useState(true);

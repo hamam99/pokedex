@@ -1,18 +1,13 @@
 import {useRecoilState} from 'recoil';
 import AxiosClient from './AxiosClient';
 import ListUrl from './ListUrl';
-import {
-  IRequest,
-  IResponseFormat,
-  PokemonListTypes,
-  ResponseListPokemon,
-  ResultListPokemon,
-} from './types';
+import {IResponseFormat} from './types/GeneralTypes';
 import {PokemonDetailTypes} from './types/PokemonDetailTypes';
 import {PokemonSpeciesTypes} from './types/PokemonSpeciesTypes';
 import {EvolutionChainTypes} from './types/EvolutionChainTypes';
 import getPokemonEvolutionChain from '../utils/getPokemonEvolutionChain';
 import StringUtils from '../utils/StringUtils';
+import { PokemonListTypes, ResponseListPokemon } from './types/PokemonListTypes';
 
 export const getListPokemon = async ({
   limit = 8,
