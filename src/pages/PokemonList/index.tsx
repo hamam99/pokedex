@@ -1,12 +1,12 @@
 import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {PokemonListTypes} from '../../services/types/GeneralTypes';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
 import {filteredPokemon, searchQuery} from '../../stores';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
 import useGetAllPokemon from '../../hooks/useGetAllPokemon';
+import {PokemonListTypes} from '../../services/types/PokemonListTypes';
 
 const PokemonList = () => {
   const {width} = useWindowDimensions();
