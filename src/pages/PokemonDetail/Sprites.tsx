@@ -8,12 +8,7 @@ const Sprites = () => {
   const detailPokemonRecoil = useRecoilValue(detailPokemon);
 
   return (
-    <View
-      style={
-        {
-          // paddingHorizontal: 12,
-        }
-      }>
+    <View style={{}}>
       <Text style={{color: 'black', fontWeight: 'bold', marginBottom: 4}}>
         Sprites
       </Text>
@@ -33,12 +28,12 @@ const Sprites = () => {
           label={'Front'}
         />
         <SpritesImage
-          url={detailPokemonRecoil?.sprites.front_shiny}
-          label={'Front Shiny'}
-        />
-        <SpritesImage
           url={detailPokemonRecoil?.sprites.back_shiny}
           label={'Back Shiny'}
+        />
+        <SpritesImage
+          url={detailPokemonRecoil?.sprites.front_shiny}
+          label={'Front Shiny'}
         />
       </View>
     </View>
