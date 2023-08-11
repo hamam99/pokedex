@@ -1,7 +1,7 @@
 import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {PokemonListTypes} from '../../services/types';
+import {PokemonListTypes} from '../../services/types/GeneralTypes';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
 import {filteredPokemon, searchQuery} from '../../stores';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -21,10 +21,7 @@ const PokemonList = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigate('PokemonDetail', {
-            name: item.name,
-            id: item.id,
-          });
+          gotoPokemonDetail(item.id, item.name);
         }}>
         <Text
           style={{
@@ -40,6 +37,13 @@ const PokemonList = () => {
         </Text>
       </TouchableOpacity>
     );
+  };
+
+  const gotoPokemonDetail = (id: string, name : string) => {
+    navigate('PokemonDetail', {
+      name
+      id,
+    });
   };
 
   const onChangeSearch = (query: string) => {
