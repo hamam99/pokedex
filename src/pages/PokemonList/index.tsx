@@ -41,7 +41,7 @@ const PokemonList = () => {
 
   const gotoPokemonDetail = (id: string, name : string) => {
     navigate('PokemonDetail', {
-      name
+      name,
       id,
     });
   };
