@@ -4,10 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 type IHeader = {
-  title: string;
+  title?: string;
   withBack?: boolean;
 };
-const Header = ({title, withBack = false}: IHeader) => {
+const Header = ({title = '', withBack = false}: IHeader) => {
   const navigation = useNavigation();
   return (
     <View
