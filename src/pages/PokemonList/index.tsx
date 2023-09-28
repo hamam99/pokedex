@@ -1,44 +1,37 @@
-import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import React, {useMemo, useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
-import {filteredPokemon, searchQuery} from '../../stores';
-import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
-import useGetAllPokemon from '../../hooks/useGetAllPokemon';
-import {
-  PokemonListTypes,
-  ResponseListPokemon,
-  ResultListPokemon,
-} from '../../services/types/PokemonListTypes';
+import {ResultListPokemon} from '../../services/types/PokemonListTypes';
 import useGetListPokemon from '../../services/useGetListPokemon';
 import StringUtils from '../../utils/StringUtils';
 
+const {width} = Dimensions.get('window');
 const PokemonList = () => {
-  const {width} = useWindowDimensions();
+  const navigate = useNavigation().navigate;
 
-  const {navigate} = useNavigation();
+  const [searchText, setSearchText] = useState('');
+  const {data, isLoading, fetchNextPage} = useGetListPokemon();
 
-  // const [searchQueryRecoil, setSearchQueryRecoil] = useRecoilState(searchQuery);
-  // const filteredPokemonRecoil = useRecoilValue(filteredPokemon);
-  // const {loading, loadMore} = useGetAllPokemon();
-  // let loading, loadMore;
-
-  const {data, isLoading, isError, fetchNextPage} = useGetListPokemon();
-  console.log(`data`, {data});
-
-  // const getAllPages = (): ResultListPokemon[] => {
-  //   const arr = [];
-  //   data?.pages.forEach(page => {
-  //     arr.push(page?.results);
-  //   });
-  //   return arr;
-  // };
-
-  const allItems: ResultListPokemon[] = React.useMemo(
+  const allItems = React.useMemo(
     () => data?.pages.flatMap(page => page.results),
     [data?.pages],
-  );
+  ) as ResultListPokemon[];
+
+  const filteredItems = useMemo(() => {
+    if (searchText.length <= 0) {
+      return allItems;
+    }
+
+    return allItems.filter(item => {
+      return item.name.toLowerCase().includes(searchText.toLowerCase());
+    });
+  }, [searchText, allItems]);
+
+  const onChangeSearch = (query: string) => {
+    setSearchText(query);
+  };
 
   const renderItem = ({item}: {item: ResultListPokemon}) => {
     return (
@@ -69,26 +62,22 @@ const PokemonList = () => {
     });
   };
 
-  const onChangeSearch = (query: string) => {
-    setSearchQueryRecoil(query);
-  };
-
   return (
     <View style={{paddingTop: 8, flex: 1}}>
-      {/* <TextInput
+      <TextInput
         onChangeText={onChangeSearch}
         label="Search"
         mode="outlined"
-        value={searchQueryRecoil}
+        value={searchText}
         multiline={false}
         style={{
           marginHorizontal: 10,
         }}
-      /> */}
+      />
 
       <FlatGrid
         itemDimension={(width - 50) / 2}
-        data={allItems}
+        data={filteredItems}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No pokemon</Text>}
         onEndReached={() => fetchNextPage()}
