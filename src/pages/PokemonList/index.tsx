@@ -4,7 +4,7 @@ import {FlatGrid} from 'react-native-super-grid';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {ResultListPokemon} from '../../services/types/PokemonListTypes';
-import useGetListPokemon from '../../services/useGetListPokemon';
+import useGetListPokemon from '../../hooks/v2/useGetListPokemon';
 import StringUtils from '../../utils/StringUtils';
 
 const {width} = Dimensions.get('window');
