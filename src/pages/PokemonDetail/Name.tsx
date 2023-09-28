@@ -1,11 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import {useRecoilValue} from 'recoil';
-import {detailPokemon} from '../../stores';
 
-const Name = () => {
-  const detailPokemonRecoil = useRecoilValue(detailPokemon);
-
+const Name = ({name}: {name: string}) => {
   return (
     <View>
       <Text
@@ -13,8 +9,9 @@ const Name = () => {
           fontSize: 16,
           color: 'black',
           fontWeight: 'bold',
+          textAlign: 'center',
         }}>
-        {detailPokemonRecoil?.name}
+        {name}
       </Text>
     </View>
   );

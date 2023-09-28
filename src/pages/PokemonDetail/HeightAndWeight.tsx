@@ -1,10 +1,16 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import {useRecoilValue} from 'recoil';
-import {detailPokemon} from '../../stores';
+import useGetDetailPokemonV2 from '../../hooks/v2/useGetDetailPokemonV2';
+import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 
-const HeightAndWeight = () => {
-  const detailPokemonRecoil = useRecoilValue(detailPokemon);
+const HeightAndWeight = ({name}: {name: string}) => {
+  const {data, isLoading, isError} = useGetDetailPokemonV2(name);
+
+  if (isLoading) {
+    return (
+      <ActivityIndicator animating={isLoading} color={MD2Colors.blue500} />
+    );
+  }
 
   return (
     <View style={{rowGap: 8}}>
@@ -16,7 +22,7 @@ const HeightAndWeight = () => {
           }}>
           {'Height : '}
         </Text>
-        <Text>{detailPokemonRecoil?.height}</Text>
+        <Text>{data?.height || '-'}</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Text
@@ -26,7 +32,7 @@ const HeightAndWeight = () => {
           }}>
           {'Weight : '}
         </Text>
-        <Text>{detailPokemonRecoil?.weight}</Text>
+        <Text>{data?.weight || '-'} </Text>
       </View>
     </View>
   );
