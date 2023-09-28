@@ -3,17 +3,21 @@ import React from 'react';
 import FastImage from 'react-native-fast-image';
 
 const SpritesImage = ({url, label}: {url: string; label: string}) => {
+  if (!url) {
+    return <></>;
+  }
+
   return (
     <View
       style={{
-        width: 80,
+        width: 120,
         alignItems: 'center',
         borderWidth: 1,
         borderRadius: 4,
         borderColor: '#6a6a6a',
       }}>
       <FastImage
-        style={{width: 70, height: 70}}
+        style={{width: 100, height: 100}}
         source={{
           uri: url,
           priority: FastImage.priority.normal,
