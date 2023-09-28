@@ -1,27 +1,50 @@
 import {View, Text, useWindowDimensions, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {ActivityIndicator, MD2Colors, TextInput} from 'react-native-paper';
 import {filteredPokemon, searchQuery} from '../../stores';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
 import useGetAllPokemon from '../../hooks/useGetAllPokemon';
-import {PokemonListTypes} from '../../services/types/PokemonListTypes';
+import {
+  PokemonListTypes,
+  ResponseListPokemon,
+  ResultListPokemon,
+} from '../../services/types/PokemonListTypes';
+import useGetListPokemon from '../../services/useGetListPokemon';
+import StringUtils from '../../utils/StringUtils';
 
 const PokemonList = () => {
   const {width} = useWindowDimensions();
 
   const {navigate} = useNavigation();
 
-  const [searchQueryRecoil, setSearchQueryRecoil] = useRecoilState(searchQuery);
-  const filteredPokemonRecoil = useRecoilValue(filteredPokemon);
-  const {loading, loadMore} = useGetAllPokemon();
+  // const [searchQueryRecoil, setSearchQueryRecoil] = useRecoilState(searchQuery);
+  // const filteredPokemonRecoil = useRecoilValue(filteredPokemon);
+  // const {loading, loadMore} = useGetAllPokemon();
+  // let loading, loadMore;
 
-  const renderItem = ({item}: {item: PokemonListTypes}) => {
+  const {data, isLoading, isError, fetchNextPage} = useGetListPokemon();
+  console.log(`data`, {data});
+
+  // const getAllPages = (): ResultListPokemon[] => {
+  //   const arr = [];
+  //   data?.pages.forEach(page => {
+  //     arr.push(page?.results);
+  //   });
+  //   return arr;
+  // };
+
+  const allItems: ResultListPokemon[] = React.useMemo(
+    () => data?.pages.flatMap(page => page.results),
+    [data?.pages],
+  );
+
+  const renderItem = ({item}: {item: ResultListPokemon}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          gotoPokemonDetail(item.id, item.name);
+          gotoPokemonDetail(StringUtils.getIdFromUrl(item.url), item.name);
         }}>
         <Text
           style={{
@@ -39,7 +62,7 @@ const PokemonList = () => {
     );
   };
 
-  const gotoPokemonDetail = (id: string, name : string) => {
+  const gotoPokemonDetail = (id: string, name: string) => {
     navigate('PokemonDetail', {
       name,
       id,
@@ -52,7 +75,7 @@ const PokemonList = () => {
 
   return (
     <View style={{paddingTop: 8, flex: 1}}>
-      <TextInput
+      {/* <TextInput
         onChangeText={onChangeSearch}
         label="Search"
         mode="outlined"
@@ -61,18 +84,19 @@ const PokemonList = () => {
         style={{
           marginHorizontal: 10,
         }}
-      />
+      /> */}
 
-      <ActivityIndicator animating={loading} color={MD2Colors.blue500} />
       <FlatGrid
         itemDimension={(width - 50) / 2}
-        data={filteredPokemonRecoil}
+        data={allItems}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No pokemon</Text>}
-        onEndReached={loadMore}
+        onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0}
-        refreshing={loading}
+        refreshing={isLoading}
+        keyExtractor={item => item?.name}
       />
+      <ActivityIndicator animating={isLoading} color={MD2Colors.blue500} />
     </View>
   );
 };
