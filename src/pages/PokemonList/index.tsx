@@ -77,7 +77,7 @@ const PokemonList = () => {
 
       <FlatGrid
         itemDimension={(width - 50) / 2}
-        data={filteredItems}
+        data={filteredItems || []}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No pokemon</Text>}
         onEndReached={() => fetchNextPage()}

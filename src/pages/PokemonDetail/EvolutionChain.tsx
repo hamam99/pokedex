@@ -1,13 +1,15 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import useGetEvolutionChain from '../../hooks/useGetEvolutionChain';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
+import useGetEvolutionChainV2 from '../../hooks/v2/useGetEvolutionChainV2';
 
 const EvolutionChain = ({idPokemon}: {idPokemon: string}) => {
-  const {data, loading} = useGetEvolutionChain(idPokemon);
+  const {data, isLoading} = useGetEvolutionChainV2(idPokemon);
 
-  if (loading) {
-    return <ActivityIndicator animating={loading} color={MD2Colors.blue300} />;
+  if (isLoading) {
+    return (
+      <ActivityIndicator animating={isLoading} color={MD2Colors.blue300} />
+    );
   }
   return (
     <View>

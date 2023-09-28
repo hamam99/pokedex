@@ -1,40 +1,46 @@
-import {useQueries, useQuery} from 'react-query';
+import {useQuery} from 'react-query';
 import AxiosClient from '../../services/AxiosClient';
 import ListUrl from '../../services/ListUrl';
 import {PokemonSpeciesTypes} from '../../services/types/PokemonSpeciesTypes';
 import StringUtils from '../../utils/StringUtils';
 import {EvolutionChainTypes} from '../../services/types/EvolutionChainTypes';
 import getPokemonEvolutionChain from '../../utils/getPokemonEvolutionChain';
+import {useEffect, useState} from 'react';
 
 const useGetEvolutionChainV2 = (id: string) => {
+  const [evolutionChain, setEvolutionChain] = useState<string[]>([]);
   const {data: dataId, isLoading: isLoadingId} = useQuery(
-    'get-evolution-id',
+    ['get-evolution-id', id],
     () =>
       AxiosClient.get(ListUrl.pokemonSpecies(id)).then(
         res => res.data as PokemonSpeciesTypes,
       ),
-    {
-      enabled: false,
-    },
+    {},
   );
-
-  const idEvolution = StringUtils.getIdFromUrl(dataId?.evolution_chain?.url);
 
   const {data: dataEvo, isLoading: isLoadingEvo} = useQuery(
-    'get-evolution-chain',
+    ['get-evolution-chain', dataId],
     () =>
-      AxiosClient.get(ListUrl.evolutionChain(idEvolution)).then(
-        res => res.data as EvolutionChainTypes,
-      ),
+      AxiosClient.get(
+        ListUrl.evolutionChain(
+          StringUtils.getIdFromUrl(dataId?.evolution_chain?.url!!),
+        ),
+      ).then(res => res.data as EvolutionChainTypes),
     {
-      enabled: idEvolution !== null ?? idEvolution !== undefined,
+      enabled: StringUtils.getIdFromUrl(dataId?.evolution_chain?.url) !== null,
     },
   );
 
-  const pokemonEvolution = getPokemonEvolutionChain(dataEvo);
+  useEffect(() => {
+    if (!dataEvo) {
+      return;
+    }
+
+    setEvolutionChain(getPokemonEvolutionChain(dataEvo));
+  }, [dataEvo]);
 
   return {
-    data: pokemonEvolution,
+    data: evolutionChain,
     isLoading: isLoadingId || isLoadingEvo,
   };
 };

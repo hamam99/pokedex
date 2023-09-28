@@ -1,4 +1,7 @@
-function getIdFromUrl(url: string): string {
+function getIdFromUrl(url: string): string | null {
+  if (!url) {
+    return null;
+  }
   const urlInArray = url.split('/');
   const id = urlInArray[urlInArray.length - 2];
   return id;

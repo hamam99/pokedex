@@ -17,7 +17,7 @@ function getPokemonEvolutionChain(
 
   extractEvolutionName(evolutionChainData.chain);
 
-  return pokemonNames;
+  return pokemonNames || [];
 }
 
 export default getPokemonEvolutionChain;
