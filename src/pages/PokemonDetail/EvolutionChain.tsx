@@ -4,8 +4,11 @@ import useGetEvolutionChain from '../../hooks/useGetEvolutionChain';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 
 const EvolutionChain = ({idPokemon}: {idPokemon: string}) => {
-  const {data = [], loading, error} = useGetEvolutionChain(idPokemon);
+  const {data, loading} = useGetEvolutionChain(idPokemon);
 
+  if (loading) {
+    return <ActivityIndicator animating={loading} color={MD2Colors.blue300} />;
+  }
   return (
     <View>
       <Text
@@ -15,10 +18,7 @@ const EvolutionChain = ({idPokemon}: {idPokemon: string}) => {
         }}>
         Evolution Chain
       </Text>
-      {<Text>{data.join(' -> ')}</Text>}
-      {loading && (
-        <ActivityIndicator animating={loading} color={MD2Colors.blue300} />
-      )}
+      {<Text>{data?.join(' -> ')}</Text>}
     </View>
   );
 };
